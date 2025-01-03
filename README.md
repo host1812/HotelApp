@@ -2,7 +2,7 @@
 
 ## Requirements
 
-### W, O
+### W, O, U, L
 
 Technical:
 - Both user and admin parts will be part of the same web apps
@@ -34,3 +34,42 @@ From admin:
     - Status of each room
     - Room number
 - Ability to find a reservation for a user by last name or phone number or email address
+
+### D
+
+Rooms:
+- Id (int)
+- Number (int)
+- RoomType-Id (FK RoomTypes)
+- Status-Id (FK Statuses)
+- Description
+
+Statuses:
+- Id
+- Title
+
+RoomTypes:
+- Id
+- Title
+- Description
+- BasePrice
+
+Bookings:
+- Id
+- Guest-Id
+- Room-Id
+- Start date
+- End date
+- BookingStatus-Id (FK BookingStatuses)
+- Total Cost
+
+BookingStatuses:
+- Id
+- Title
+
+Guests:
+- Id
+- FirstName
+- LastName
+- Email
+- PhoneNumber
