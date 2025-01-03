@@ -44,7 +44,7 @@ Rooms:
 - Status-Id (FK Statuses)
 - Description
 
-Statuses:
+RoomStatuses:
 - Id
 - Title
 
