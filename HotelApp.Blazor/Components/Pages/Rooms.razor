@@ -1,0 +1,53 @@
+﻿@page "/rooms"
+@attribute [StreamRendering]
+@inject ILogger<Rooms> logger
+@inject IRoomService service
+
+<PageTitle>Rooms: Available</PageTitle>
+
+<h1>Available Rooms</h1>
+
+<p>Shows data for all available rooms</p>
+
+@if (rooms == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Number</th>
+                <th>Status</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price per Night</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var room in rooms)
+            {
+                <tr>
+                    <td>@room.Id</td>
+                    <td>@room.Number</td>
+                    <td>@room.Status.Title</td>
+                    <td>@room.Type.Title</td>
+                    <td>@room.Type.Description</td>
+                    <td>@room.Type.BasePrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Room>? rooms;
+
+    protected override void OnInitialized()
+    {
+        rooms = service.GetRooms();
+        logger.LogInformation("Page rendering completed");
+    }
+}

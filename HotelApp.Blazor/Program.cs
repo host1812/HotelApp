@@ -1,4 +1,6 @@
 using HotelApp.Blazor.Components;
+using HotelApp.Core.Databases;
+using HotelApp.Core.Services;
 
 namespace HotelApp.Blazor;
 public class Program
@@ -10,6 +12,9 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
+
+        builder.Services.AddSingleton<IDataAccess, DataAccess>();
+        builder.Services.AddSingleton<IRoomService, RoomService>();
 
         var app = builder.Build();
 
