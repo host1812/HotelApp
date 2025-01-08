@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Rooms]
 (
     [Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-    [Number] INT NOT NULL, 
+    [Number] NVARCHAR(10) NOT NULL, 
     [TypeId] INT NOT NULL, 
     [StatusId] INT NOT NULL, 
     CONSTRAINT [FK_Rooms_To_RoomStatuses] FOREIGN KEY ([StatusId]) REFERENCES [RoomStatuses]([Id]),
