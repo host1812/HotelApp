@@ -12,11 +12,11 @@ Post-Deployment Script Template
 
 IF NOT EXISTS (SELECT 1 FROM dbo.RoomTypes)
 BEGIN
-  INSERT INTO dbo.RoomTypes(Title,Description)
+  INSERT INTO dbo.RoomTypes(Title,Description,BasePrice)
   VALUES
-    ('Single King Size Bed', 'A room with a single king-size bed and a window.'),
-    ('Two King Size Beds', 'A room with two king-size beds and a window.'),
-    ('Executive Suite', 'Two rooms, each with a king-size bed and a window.');
+    ('Single King Size Bed', 'A room with a single king-size bed and a window.', 50.99),
+    ('Two King Size Beds', 'A room with two king-size beds and a window.', 99.10),
+    ('Executive Suite', 'Two rooms, each with a king-size bed and a window.', 178.57);
 END
 
 IF NOT EXISTS (SELECT 1 FROM dbo.RoomStatuses)
@@ -65,8 +65,8 @@ IF NOT EXISTS (SELECT 1 FROM dbo.Bookings)
 BEGIN
   INSERT INTO dbo.Bookings(StartDate,EndDate,RoomId,GuestId,StatusId,TotalCost)
   VALUES
-    ('2024-11-12', '2024-11-31', 1, 1, 1, 1059.99),
-    ('2024-11-15', '2024-11-18', 8, 2, 1, 399.78),
-    ('2024-12-01', '2024-12-04', 6, 3, 1, 994.35);
+    (convert(datetime,'2004-05-23T14:25:10'),convert(datetime,'2004-05-23T14:25:10'), 1, 1, 1, 1059.99);
+    --(convert(datetime,'2024-11-15'), convert(datetime,'2024-11-18'), 8, 2, 1, 399.78),
+    --(convert(datetime,'2024-12-01'), convert(datetime,'2024-12-04'), 6, 3, 1, 994.35);
 END
 
