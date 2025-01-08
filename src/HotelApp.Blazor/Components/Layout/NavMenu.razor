@@ -13,17 +13,34 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="rooms">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Rooms
+            <NavLink class="nav-link" href="book">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Book
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="bookings">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Bookings
+        <div>
+            <NavLink class="nav-link" @onclick="()=>expandSubNav = !expandSubNav">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Admin
             </NavLink>
         </div>
+        @if (expandSubNav)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="rooms">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Rooms
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="bookings">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Bookings
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
+@code {
+
+    private bool expandSubNav;
+
+}

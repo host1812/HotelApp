@@ -66,10 +66,12 @@ BEGIN
   INSERT INTO dbo.Bookings(StartDate,EndDate,RoomTypeId,GuestId,StatusId,TotalCost)
   VALUES
     (convert(datetime,'2025-01-10'), convert(datetime,'2025-01-18'), 1, 1, 1, 1059.99),
-    (convert(datetime,'2025-01-11'), convert(datetime,'2025-01-17'), 2, 1, 1, 1059.99),
+    (convert(datetime,'2025-01-11'), convert(datetime,'2025-01-17'), 1, 1, 1, 1059.99),
     (convert(datetime,'2025-01-12'), convert(datetime,'2025-01-16'), 3, 1, 1, 1059.99),
     (convert(datetime,'2025-01-01'), convert(datetime,'2025-01-04'), 1, 2, 1, 399.78),
     (convert(datetime,'2025-01-02'), convert(datetime,'2025-01-05'), 2, 2, 1, 399.78),
+    (convert(datetime,'2025-01-07'), convert(datetime,'2025-01-09'), 2, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 2, 2, 1, 399.78),
     (convert(datetime,'2025-01-21'), convert(datetime,'2025-01-31'), 3, 3, 1, 994.35);
 END
 
