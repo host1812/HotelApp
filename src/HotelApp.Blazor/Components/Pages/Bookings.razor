@@ -34,16 +34,18 @@ else
                 <th>Type</th>
                 <th>Description</th>
                 <th>Price/Night</th>
+                <th>Available</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var roomType in availableRoomTypes)
+            @foreach (var r in availableRoomTypes)
             {
                 <tr>
-                    <td>@roomType.Id</td>
-                    <td>@roomType.Title</td>
-                    <td>@roomType.Description</td>
-                    <td>@roomType.BasePrice</td>
+                    <td>@r.RoomType.Id</td>
+                    <td>@r.RoomType.Title</td>
+                    <td>@r.RoomType.Description</td>
+                    <td>@r.RoomType.BasePrice</td>
+                    <td>@r.Count</td>
                 </tr>
             }
         </tbody>
@@ -52,7 +54,7 @@ else
 
 @code {
     private List<Room> rooms = new();
-    private HashSet<RoomType> availableRoomTypes = new();
+    private HashSet<(RoomType RoomType, int Count)> availableRoomTypes = new();
     private List<Booking> bookings = new();
 
     [SupplyParameterFromForm]
@@ -91,13 +93,13 @@ else
                 var diff = roomType.Count - booking.Count;
                 if (diff > 0)
                 {
-                    availableRoomTypes.Add(roomTypes.Where(x => x.Id == roomType.RoomTypeId).First());
+                    availableRoomTypes.Add((roomTypes.Where(x => x.Id == roomType.RoomTypeId).First(), diff));
                 }
             }
             else
             {
                 // booking is null, means we can add the room
-                availableRoomTypes.Add(roomTypes.Where(x => x.Id == roomType.RoomTypeId).First());
+                availableRoomTypes.Add((roomTypes.Where(x => x.Id == roomType.RoomTypeId).First(), roomType.Count));
             }
         }
     }

@@ -71,7 +71,13 @@ BEGIN
     (convert(datetime,'2025-01-01'), convert(datetime,'2025-01-04'), 1, 2, 1, 399.78),
     (convert(datetime,'2025-01-02'), convert(datetime,'2025-01-05'), 2, 2, 1, 399.78),
     (convert(datetime,'2025-01-07'), convert(datetime,'2025-01-09'), 2, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 1, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 1, 2, 1, 399.78),
     (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 2, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 2, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 2, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 3, 2, 1, 399.78),
+    (convert(datetime,'2025-01-19'), convert(datetime,'2025-01-20'), 3, 2, 1, 399.78),
     (convert(datetime,'2025-01-21'), convert(datetime,'2025-01-31'), 3, 3, 1, 994.35);
 END
 
