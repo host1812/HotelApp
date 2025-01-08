@@ -1,4 +1,5 @@
 ﻿@page "/rooms"
+@using HotelApp.Blazor.Models
 @attribute [StreamRendering]
 @inject ILogger<Rooms> logger
 @inject IRoomService service
@@ -27,7 +28,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var room in rooms)
+            @foreach (var room in roomsView)
             {
                 <tr>
                     <td>@room.Id</td>
@@ -43,11 +44,39 @@ else
 }
 
 @code {
+    private List<RoomView> roomsView = [];
     private List<Room>? rooms;
+    private List<RoomType>? roomTypes;
+    private List<RoomStatus>? roomStatuses;
 
     protected override void OnInitialized()
     {
         rooms = service.GetRooms();
+        roomTypes = service.GetRoomTypes();
+        roomStatuses = service.GetRoomStatuses();
+
+        foreach (var r in rooms)
+        {
+            var rType = roomTypes.Where(x => x.Id == r.TypeId).FirstOrDefault();
+            if (rType is null)
+            {
+                logger.LogError($"Failed to get roomType for {r.TypeId} room id.");
+                return;
+            }
+            var rStatus = roomStatuses.Where(x => x.Id == r.StatusId).FirstOrDefault();
+            if (rStatus is null)
+            {
+                logger.LogError($"Failed to get roomStatus for {r.StatusId} status id.");
+                return;
+            }
+            // We need to render only available rooms
+            if (rStatus.Title == "Available")
+            {
+                roomsView.Add(new RoomView { Id = r.Id, Number = r.Number, Type = rType, Status = rStatus });
+            }
+            
+        }
+
         logger.LogInformation("Page rendering completed");
     }
 }

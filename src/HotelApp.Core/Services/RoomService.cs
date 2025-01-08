@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,9 +23,24 @@ public class RoomService : IRoomService
 
     public List<Room> GetRooms()
     {
-        var sql = "SELECT * FROM dbo.Rooms";
-        var results = da.LoadData<Room, dynamic>(sql, new { });
+        var sql = "SELECT Id, Number, StatusId, TypeId FROM dbo.Rooms";
+        var rooms = da.LoadData<Room, dynamic>(sql, new { });
         logger.LogInformation("Successfully got data from the database");
-        return results;
+        return rooms;
+    }
+
+    public List<RoomType> GetRoomTypes()
+    {
+        var sql = "SELECT Id, Title, Description, BasePrice FROM dbo.RoomTypes";
+        var roomTypes = da.LoadData<RoomType, dynamic>(sql, new { });
+        logger.LogInformation("Successfully got data from the database");
+        return roomTypes;
+    }
+    public List<RoomStatus> GetRoomStatuses()
+    {
+        var sql = "SELECT Id, Title FROM dbo.RoomStatuses";
+        var roomStatuses = da.LoadData<RoomStatus, dynamic>(sql, new { });
+        logger.LogInformation("Successfully got data from the database");
+        return roomStatuses;
     }
 }
