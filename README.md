@@ -2,10 +2,16 @@
 
 ## Requirements
 
-### W
+### W, O
 
 Technical:
-- Both user and admin parts will be part of the same web apps.
+- Both user and admin parts will be part of the same web apps
+- ASP.NET Core Blazor Web App
+- SQL-like data layer
+
+Assumptions:
+- This is single hotel app
+- Book a room type, not specific room number
 
 From user:
 - Book a room:
@@ -17,7 +23,7 @@ From user:
     - Select end date
     - See total price
 - Manage current reservations:
-    - Be able to login and see list of current reservations (start date, end date, etc...)
+    - Be able to login and see list of current, previous reservations (start date, end date, etc...)
     - Be able to cancel current reservation
 - Ability to self-check-in when in the hotel:
     - A simple lookup via last name or phone number or email address
