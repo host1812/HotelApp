@@ -15,6 +15,7 @@ public class Program
 
         builder.Services.AddSingleton<IDataAccess, DataAccess>();
         builder.Services.AddSingleton<IRoomService, RoomService>();
+        builder.Services.AddSingleton<IBookingService, BookingService>();
 
         var app = builder.Build();
 

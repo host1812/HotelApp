@@ -75,4 +75,7 @@
   <ItemGroup>
     <None Include="Publish Profiles\HotelApp.Data.publish.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="HotelApp.Data.refactorlog" />
+  </ItemGroup>
 </Project>
