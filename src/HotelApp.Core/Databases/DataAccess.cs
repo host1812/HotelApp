@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HotelApp.Core.Databases;
 
-public class DataAccess
+public class DataAccess : IDataAccess
 {
     private readonly IConfiguration config;
     public DataAccess(IConfiguration config)
@@ -29,7 +29,7 @@ public class DataAccess
         {
             throw new ApplicationException("Invalid configuration provided");
         }
-        
+
         using IDbConnection connection = new SqlConnection(connectionString);
         var commandType = CommandType.Text;
         if (dataAccessOptions.IsStoredProcesure == true)
