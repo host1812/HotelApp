@@ -51,8 +51,34 @@ public class DataAccess
         return LoadData<T, U>(sql, parameters, x => { x.IsStoredProcesure = false; }, "Default");
     }
 
-    public void SaveData<T>(string sql, T parameters, string connectionString, dynamic options)
+    public void SaveData<T>(string sql, T parameters, Action<DataAccessOptions> options, string connStringName)
     {
+        var dataAccessOptions = new DataAccessOptions();
+        options.Invoke(dataAccessOptions);
 
+        string? connectionString = config.GetConnectionString(connStringName);
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new ApplicationException("Invalid configuration provided");
+        }
+
+        using IDbConnection connection = new SqlConnection(connectionString);
+        var commandType = CommandType.Text;
+        if (dataAccessOptions.IsStoredProcesure == true)
+        {
+            commandType = CommandType.StoredProcedure;
+        }
+
+        connection.Execute(sql, parameters, commandType: commandType);
+    }
+
+    public void SaveData<T>(string sql, T parameters, Action<DataAccessOptions> options)
+    {
+        SaveData<T>(sql, parameters, options, "Default");
+    }
+
+    public void SaveData<T>(string sql, T parameters)
+    {
+        SaveData<T>(sql, parameters, x => { x.IsStoredProcesure = false; }, "Default");
     }
 }
