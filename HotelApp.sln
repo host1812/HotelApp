@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "HotelApp.Data", "src\HotelApp.Data\HotelApp.Data.sqlproj", "{7CAACACC-4374-4BF7-8FD7-C515BDA6A854}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelApp.Blazor", "HotelApp.Blazor\HotelApp.Blazor.csproj", "{06DF92C7-CB1B-4409-B005-F69D78C6C95B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelApp.Blazor", "src\HotelApp.Blazor\HotelApp.Blazor.csproj", "{06DF92C7-CB1B-4409-B005-F69D78C6C95B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
