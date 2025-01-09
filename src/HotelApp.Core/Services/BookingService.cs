@@ -34,4 +34,13 @@ public class BookingService : IBookingService
         logger.LogInformation($"Got list of bookings for specific dates from the database. StartDate: {startDate}, EndDate: {endDate}");
         return results;
     }
+
+    public void BookRoomType(DateTime startDate, DateTime endDate, int roomTypeId, int guestId, decimal totalCost)
+    {
+        var sql = "INSERT INTO dbo.Bookings VALUES (@StartDate, @EndDate, @RoomTypeId, @GuestId, 1, @TotalCost)";
+        da.SaveData<dynamic>(sql, new { StartDate = startDate, EndDate = endDate, RoomTypeId = roomTypeId, GuestId = guestId, TotalCost = totalCost });
+        logger.LogInformation(
+            $"Successfully added new entry in the database. StartDate: {startDate}, " +
+            $"EndDate: {endDate}, RoomTypeId: {roomTypeId}, GuestId: {guestId}, TotalCost = {totalCost}");
+    }
 }
