@@ -1,16 +1,17 @@
 ﻿@page "/book"
 @using HotelApp.Blazor.Models
 @attribute [StreamRendering]
-@inject ILogger<Bookings> logger
+@inject ILogger<Book> logger
+@inject IRoomService roomService
 @inject IBookingService bookingService
 
-<PageTitle>Bookigs: Available</PageTitle>
+<PageTitle>Bookigs: Book Available Room</PageTitle>
 
 <h1>Available Bookings</h1>
 
 <p>Shows data for all available rooms</p>
 
-<EditForm Model="@this" OnValidSubmit="HandleValidSubmit" FormName="Bookings">
+<EditForm Model="@this" FormName="Book">
     <label for="startDate">Start Date:</label>
     <InputDate id="startDate" @bind-Value="startDate" />
 
@@ -20,7 +21,7 @@
     <button type="submit">Submit</button>
 </EditForm>
 
-@if (bookings == null)
+@if (availableRoomTypes == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -30,21 +31,27 @@ else
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Number</th>
-                <th>Status</th>
-                <th>Title</th>
+                <th>Type</th>
                 <th>Description</th>
-                <th>Price per Night</th>
+                <th>Price/Night</th>
+                <th>Available ##</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var booking in bookings)
+            @foreach (var r in availableRoomTypes)
             {
                 <tr>
-                    <td>@booking.Id</td>
-                    <td>@booking.RoomTypeId</td>
-                    <td>@booking.StartDate</td>
-                    <td>@booking.EndDate</td>
+                    <td>@r.RoomType.Id</td>
+                    <td>@r.RoomType.Title</td>
+                    <td>@r.RoomType.Description</td>
+                    <td>@r.RoomType.BasePrice</td>
+                    <td>@r.Count</td>
+                    <td>
+                        <EditForm Model="@this" FormName="Reservation">
+                            <button type="submit">Book</button>
+                        </EditForm>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -52,24 +59,60 @@ else
 }
 
 @code {
+    private List<Room> rooms = new();
+    private HashSet<(RoomType RoomType, int Count)> availableRoomTypes = new();
     private List<Booking> bookings = new();
 
     [SupplyParameterFromForm]
     private DateTime startDate { get; set; } = DateTime.Now;
-    
+
     [SupplyParameterFromForm]
     private DateTime endDate { get; set; } = DateTime.Now;
 
-    protected override void OnInitialized()
+    private void getAvailableRoomTypes()
     {
-        bookings = bookingService.GetBooking();
-        logger.LogInformation("Page rendering completed");
+        rooms = roomService.GetRooms();
+        bookings = bookingService.GetBooking(startDate, endDate);
+        var roomTypes = roomService.GetRoomTypes();
+        logger.LogInformation("Form submitted with Start Date: {StartDate} and End Date: {EndDate}", startDate, endDate);
+
+        var groupedRooms = rooms.GroupBy(x => x.TypeId)
+        .Select(grp => new
+        {
+            RoomTypeId = grp.Key,
+            Count = grp.Count(),
+        }).ToList();
+
+        var groupedBookings = bookings.GroupBy(x => x.RoomTypeId)
+        .Select(grp => new
+        {
+            RoomTypeId = grp.Key,
+            Count = grp.Count(),
+        }).ToList();
+
+        // Process each room and substract booking
+        foreach (var roomType in groupedRooms)
+        {
+            var booking = groupedBookings.Where(x => x.RoomTypeId == roomType.RoomTypeId).FirstOrDefault();
+            if (booking is not null)
+            {
+                var diff = roomType.Count - booking.Count;
+                if (diff > 0)
+                {
+                    availableRoomTypes.Add((roomTypes.Where(x => x.Id == roomType.RoomTypeId).First(), diff));
+                }
+            }
+            else
+            {
+                // booking is null, means we can add the room
+                availableRoomTypes.Add((roomTypes.Where(x => x.Id == roomType.RoomTypeId).First(), roomType.Count));
+            }
+        }
     }
 
-    private void HandleValidSubmit()
+
+    protected override void OnInitialized()
     {
-        // Handle form submission logic here
-        bookings = bookingService.GetBooking(startDate, endDate);
-        logger.LogInformation("Form submitted with Start Date: {StartDate} and End Date: {EndDate}", startDate, endDate);
+        getAvailableRoomTypes();
     }
 }

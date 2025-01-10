@@ -1,17 +1,16 @@
-﻿@page "/booking"
+﻿@page "/bookings"
 @using HotelApp.Blazor.Models
 @attribute [StreamRendering]
 @inject ILogger<Bookings> logger
-@inject IRoomService roomService
 @inject IBookingService bookingService
 
-<PageTitle>Bookigs: Book Available Room</PageTitle>
+<PageTitle>Bookigs: Available</PageTitle>
 
 <h1>Available Bookings</h1>
 
 <p>Shows data for all available rooms</p>
 
-<EditForm Model="@this" FormName="Bookings">
+<EditForm Model="@this" OnValidSubmit="HandleValidSubmit" FormName="Bookings">
     <label for="startDate">Start Date:</label>
     <InputDate id="startDate" @bind-Value="startDate" />
 
@@ -21,7 +20,7 @@
     <button type="submit">Submit</button>
 </EditForm>
 
-@if (availableRoomTypes == null)
+@if (bookings == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -31,21 +30,21 @@ else
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Type</th>
+                <th>Number</th>
+                <th>Status</th>
+                <th>Title</th>
                 <th>Description</th>
-                <th>Price/Night</th>
-                <th>Available</th>
+                <th>Price per Night</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var r in availableRoomTypes)
+            @foreach (var booking in bookings)
             {
                 <tr>
-                    <td>@r.RoomType.Id</td>
-                    <td>@r.RoomType.Title</td>
-                    <td>@r.RoomType.Description</td>
-                    <td>@r.RoomType.BasePrice</td>
-                    <td>@r.Count</td>
+                    <td>@booking.Id</td>
+                    <td>@booking.RoomTypeId</td>
+                    <td>@booking.StartDate</td>
+                    <td>@booking.EndDate</td>
                 </tr>
             }
         </tbody>
@@ -53,8 +52,6 @@ else
 }
 
 @code {
-    private List<Room> rooms = new();
-    private HashSet<(RoomType RoomType, int Count)> availableRoomTypes = new();
     private List<Booking> bookings = new();
 
     [SupplyParameterFromForm]
@@ -63,50 +60,16 @@ else
     [SupplyParameterFromForm]
     private DateTime endDate { get; set; } = DateTime.Now;
 
-    private void getAvailableRoomTypes()
-    {
-        rooms = roomService.GetRooms();
-        bookings = bookingService.GetBooking(startDate, endDate);
-        var roomTypes = roomService.GetRoomTypes();
-        logger.LogInformation("Form submitted with Start Date: {StartDate} and End Date: {EndDate}", startDate, endDate);
-
-        var groupedRooms = rooms.GroupBy(x => x.TypeId)
-        .Select(grp => new
-        {
-            RoomTypeId = grp.Key,
-            Count = grp.Count(),
-        }).ToList();
-
-        var groupedBookings = bookings.GroupBy(x => x.RoomTypeId)
-        .Select(grp => new
-        {
-            RoomTypeId = grp.Key,
-            Count = grp.Count(),
-        }).ToList();
-
-        // Process each room and substract booking
-        foreach (var roomType in groupedRooms)
-        {
-            var booking = groupedBookings.Where(x => x.RoomTypeId == roomType.RoomTypeId).FirstOrDefault();
-            if (booking is not null)
-            {
-                var diff = roomType.Count - booking.Count;
-                if (diff > 0)
-                {
-                    availableRoomTypes.Add((roomTypes.Where(x => x.Id == roomType.RoomTypeId).First(), diff));
-                }
-            }
-            else
-            {
-                // booking is null, means we can add the room
-                availableRoomTypes.Add((roomTypes.Where(x => x.Id == roomType.RoomTypeId).First(), roomType.Count));
-            }
-        }
-    }
-
-
     protected override void OnInitialized()
     {
-        getAvailableRoomTypes();
+        bookings = bookingService.GetBooking();
+        logger.LogInformation("Page rendering completed");
+    }
+
+    private void HandleValidSubmit()
+    {
+        // Handle form submission logic here
+        bookings = bookingService.GetBooking(startDate, endDate);
+        logger.LogInformation("Form submitted with Start Date: {StartDate} and End Date: {EndDate}", startDate, endDate);
     }
 }
