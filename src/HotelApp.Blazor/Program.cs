@@ -13,7 +13,7 @@ public class Program
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
-        builder.Services.AddSingleton<IDataAccess, DataAccess>();
+        builder.Services.AddTransient<IDataAccess, DataAccess>();
         builder.Services.AddSingleton<IRoomService, RoomService>();
         builder.Services.AddSingleton<IBookingService, BookingService>();
 
