@@ -1,6 +1,42 @@
 ﻿@page "/reservation"
-<h3>Reservation</h3>
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+@inject ILogger<Reservation> logger
+@inject IGuestService guestService
+@inject IBookingService bookingService
+@inject ReservationStateContainer reservationStateContainer
+
+<PageTitle>Reservation</PageTitle>
+
+<h1>Selected Room</h1>
+
+<div>
+    <p>Room Type: @roomType?.Title</p>
+</div>
+<div>
+    <p>To confirm reservation please enter your email:</p>
+    <EditForm FormName="Reservation" OnValidSubmit="HandleReservation">
+        <label>email</label>
+        <InputText id="email" @bind-Value="email">email</InputText>
+    </EditForm>
+</div>
 
 @code {
+    private RoomType? roomType;
+    private String? email;
 
+    protected override void OnInitialized()
+    {
+        roomType = reservationStateContainer.Value;
+    }
+
+    private void HandleReservation()
+    {
+        if (email is null)
+        {
+            logger.LogWarning("Not sure why email is null here");
+            return;
+        }
+        var guest = guestService.GetGuestByEmail(email);
+    }
 }

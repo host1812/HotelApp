@@ -1,9 +1,11 @@
 ﻿@page "/book"
-@using HotelApp.Blazor.Models
+@rendermode InteractiveServer
 @attribute [StreamRendering]
 @inject ILogger<Book> logger
 @inject IRoomService roomService
 @inject IBookingService bookingService
+@inject ReservationStateContainer reservationStateContainer
+@inject NavigationManager navigationManager
 
 <PageTitle>Bookigs: Book Available Room</PageTitle>
 
@@ -23,7 +25,7 @@
 
 @if (availableRoomTypes == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Loading...</em></p>  
 }
 else
 {
@@ -48,9 +50,7 @@ else
                     <td>@r.RoomType.BasePrice</td>
                     <td>@r.Count</td>
                     <td>
-                        <EditForm Model="@this" FormName="Reservation">
-                            <button type="submit">Book</button>
-                        </EditForm>
+                        <button @onclick="@(e => StartReservation(e, r.RoomType))">Book</button>
                     </td>
                 </tr>
             }
@@ -59,6 +59,8 @@ else
 }
 
 @code {
+    private string headingValue = "Initial heading";
+    private void UpdateHeading() => headingValue = $"New heading ({DateTime.Now})";
     private List<Room> rooms = new();
     private HashSet<(RoomType RoomType, int Count)> availableRoomTypes = new();
     private List<Booking> bookings = new();
@@ -110,9 +112,15 @@ else
         }
     }
 
-
     protected override void OnInitialized()
     {
         getAvailableRoomTypes();
+    }
+
+    private void StartReservation(MouseEventArgs e, RoomType rt)
+    {
+        logger.LogInformation($"Starting reservation for RoomType: {rt.Title}");
+        reservationStateContainer.Value = rt;
+        navigationManager.NavigateTo("/reservation");
     }
 }

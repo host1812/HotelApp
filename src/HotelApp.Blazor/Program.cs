@@ -1,4 +1,5 @@
 using HotelApp.Blazor.Components;
+using HotelApp.Blazor.Services;
 using HotelApp.Core.Databases;
 using HotelApp.Core.Services;
 
@@ -16,6 +17,8 @@ public class Program
         builder.Services.AddTransient<IDataAccess, DataAccess>();
         builder.Services.AddSingleton<IRoomService, RoomService>();
         builder.Services.AddSingleton<IBookingService, BookingService>();
+        builder.Services.AddSingleton<IGuestService, GuestService>();
+        builder.Services.AddScoped<ReservationStateContainer>();
 
         var app = builder.Build();
 

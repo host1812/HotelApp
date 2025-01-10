@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelApp.Core.Services;
-public class GuestService
+public class GuestService : IGuestService
 {
     private readonly ILogger<GuestService> logger;
     private readonly IDataAccess da;
-    
+
     public GuestService(ILogger<GuestService> logger, IDataAccess da)
     {
         this.logger = logger;
